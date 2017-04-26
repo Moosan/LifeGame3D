@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,12 +7,15 @@ public class LifeManager : MonoBehaviour {
     public int Min;
     private static World world;
     public GameObject Prefab;
+    private static GameObject gameobject;
     private static List<GameObject> objects;
     public Vector3[] PutLives;
     private int index;
     public static bool isLifeManagerInitialized;
+    public bool NonStop;
     public void Start()
     {
+        gameobject = gameObject;
         Life.LifeInitializer(Max,Min);
         world = Life.World;
         objects=new List<GameObject>();
@@ -27,9 +29,10 @@ public class LifeManager : MonoBehaviour {
     {
         foreach (var pos in array)
         {
-            if(objects.Any(obj=>obj.transform.position==pos))continue;
+            if(objects.Any(obj=>obj.transform.localPosition==pos))continue;
             world.Put(pos);
             GameObject newObj = Instantiate(prefab, pos, new Quaternion());
+            newObj.transform.parent = gameobject.transform;
             objects.Add(newObj);
         }
     }
@@ -49,12 +52,12 @@ public class LifeManager : MonoBehaviour {
                 case 1:
                     index = 2;
                     world.CallMove();
-                    
                     break;
                 case 2:
                     index = 0;
                     MakeView(world.Actives());
-                    //ok = false;
+                    if (NonStop) break;
+                    ok = false;
                     break;
                 default:
                     break;
@@ -65,27 +68,19 @@ public class LifeManager : MonoBehaviour {
     private void MakeView(IEnumerable<Vector3> poss)
     {
         var array = poss as Vector3[] ?? poss.ToArray();
-        if (array.Length > objects.Count)
+        var delta=array.Length-objects.Count;
+        if (delta>0)
         {
-            for (int i = 0; i < array.Length - objects.Count; i++)
+            for (int i = 0; i < delta; i++)
             {
-                objects.Add(Instantiate(Prefab,new Vector3(),new Quaternion()));
+                GameObject newObj = Instantiate(Prefab, new Vector3(), transform.rotation);
+                newObj.transform.parent = gameobject.transform;
+                objects.Add(newObj);
             }
         }
         for (int i=0;i<objects.Count;i++)
         {
-            objects[i].transform.position = i < array.Length ? array[i] : new Vector3(-100,-100,-100);
+            objects[i].transform.localPosition = i < array.Length ? array[i] : new Vector3(-100,-1000,-100);
         }
-        /*foreach (var pos in array)
-        {
-            if(objects.Any(obj=>obj.transform.position==pos))continue;
-            GameObject newObj=Instantiate(Prefab,pos,new Quaternion());
-            objects.Add(newObj);
-        }
-        foreach (var obj in objects)
-        {
-            if (array.Any(pos => obj.transform.position == pos)) obj.GetComponent<MeshRenderer>().enabled = true;
-            else obj.GetComponent<MeshRenderer>().enabled = false;
-        }*/
     }
 }

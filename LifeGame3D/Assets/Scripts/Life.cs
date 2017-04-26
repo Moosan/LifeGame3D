@@ -42,9 +42,7 @@ public class Life {
     public static void LifeInitializer(int max,int min)
     {//ライフを初期化
         WorldInitializer();
-        Debug.Log("WorldInitialized");
         MaxMin=new Vector2(max,min);
-        Debug.Log("LifeInitialized");
     }
     public Life(Vector3 pos)
     {//一般のコンストラクタ
@@ -131,7 +129,10 @@ public class World
 {
     private List<Life> Lives { get; set; }
     private static Vector3[] Directions;
-
+    public int Length()
+    {
+        return Lives.Count;
+    }
     private static void DirectionsInitializer()
     {
         Directions = new Vector3[26];
@@ -193,13 +194,10 @@ public class World
             var newPos = pos + next;
             life.Env.Add(LifeExists(newPos) ?? new Life(newPos, false,false));
         }
-        Debug.Log("EnvCount==" + life.Env.Count);
         foreach (var nearLife in life.Env)
         {
-            Debug.Log("nearLife.env.Count==" + nearLife.Env.Count);
             if (nearLife.Env.Any(nearnearLife => nearnearLife.GetPos() == life.GetPos()))
             {
-                Debug.Log("FindOwn");
                 continue;
             }
             nearLife.Env.Add(life);
