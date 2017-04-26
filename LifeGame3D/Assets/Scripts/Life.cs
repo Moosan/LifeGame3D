@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts;
 using UnityEngine;
-using UnityEngine.Video;
 
 public class Life {
     private Vector3 Pos { get; set; }
@@ -176,13 +173,11 @@ public class World
             var newPos = pos + next;
             life.Env.Add(LifeExists(newPos) ?? new Life(newPos, false));
         }
-        Debug.Log("EnvCount=="+life.Env.Count);
+
         foreach (var nearLife in life.Env)
         {
-            Debug.Log("nearLife.env.Count=="+nearLife.Env.Count);
             if (nearLife.Env.Any(nearnearLife => nearnearLife.GetPos() == life.GetPos()))
             {
-                Debug.Log("FindOwn");
                 continue;
             }
             nearLife.Env.Add(life);

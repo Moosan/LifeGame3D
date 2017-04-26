@@ -26,6 +26,7 @@ public class LifePrefab : MonoBehaviour
         if (LifeManager.isLifeManagerInitialized)
         {
             LifeManager.PutLife(positions, Prefab);
+
             Destroy(this);
         }
     }

@@ -44,26 +44,19 @@ public class LifeManager : MonoBehaviour {
             {
                 case 0:
                     index = 1;
-                    Debug.Log("fase:"+0);
                     world.CallLookEnv();
-                    Debug.Log("Environment Get");
                     break;
                 case 1:
                     index = 2;
-                    Debug.Log("fase:"+1);
                     world.CallMove();
-                    Debug.Log("Lives moved.");
                     
                     break;
                 case 2:
-
                     index = 0;
-                    Debug.Log("fase:"+2);
                     MakeView(world.Actives());
-                    Debug.Log("MakeView");
+                    //ok = false;
                     break;
                 default:
-                    Debug.Log("なぞい");
                     break;
             }
         }
