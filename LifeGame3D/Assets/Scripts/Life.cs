@@ -6,25 +6,41 @@ using UnityEngine;
 using UnityEngine.Video;
 
 public class Life {
-    private Vector3 pos { get; set; }
-    public Vector3 Pos()
+    private Vector3 Pos { get; set; }
+
+    public Vector3 GetPos()
     {
-        return pos;
+        return Pos;
     }
-    public List<Life> env { get; set; }
+
+    public List<Life> Env { get; set; }
     public bool DoHaveEnv { get; set; }
-    private bool active { get; set; }
-    public bool isActive()
+    private bool Active { get; set; }
+    public bool IsActive()
     {
-        return active;
+        return Active;
     }
     private bool isGood;
     private static Vector2 MaxMin { get; set; }
-    public static World world { get; set; }
+    public static World World { get; set; }
+
+    public bool IsGood
+    {
+        get
+        {
+            return isGood;
+        }
+
+        set
+        {
+            isGood = value;
+        }
+    }
+
     private static void WorldInitializer()
     {//ワールドを初期化
         World.WorldInitializer();
-        world=new World();
+        World=new World();
     }
     public static void LifeInitializer(int max,int min)
     {//ライフを初期化
@@ -35,32 +51,33 @@ public class Life {
     }
     public Life(Vector3 pos)
     {//一般のコンストラクタ
-        env=new List<Life>();
-        this.pos = pos;
+        Env=new List<Life>();
+        this.Pos = pos;
         DoHaveEnv = false;
-        active = true;
-        world.Add(this);
-        world.GiveEnv(this);
+        Active = true;
+        World.Add(this);
+        World.GiveEnv(this);
     }
     public Life(Vector3 pos, bool active)
     {//ワールド専用のコンストラクタ
-        env=new List<Life>();
-        this.pos = pos;
+        Env=new List<Life>();
+        this.Pos = pos;
         DoHaveEnv = false;
-        this.active = active;
-        world.Add(this);
+        this.Active = active;
+        World.Add(this);
     }
     public Life(Vector3 pos, bool active,bool hoge)
     {//急遽作られた謎のコンストラクタ
-        env = new List<Life>();
-        this.pos = pos;
+        Env = new List<Life>();
+        this.Pos = pos;
         DoHaveEnv = false;
-        this.active = active;
-        world.Lives3.Add(this);
+        this.Active = active;
+        //Live3にAddしてる、こうすることで、worldのCallMove内あるforeach文の母集合の要素数に変更を加えることを阻止している。
+        World.Lives3.Add(this);
     }
     private int EnvState()
     {//Envirnmentの中でアクティブなライフの数
-        return env.Count(next=>next.isActive());
+        return Env.Count(next=>next.IsActive());
     }
     public void LookEnv()
     {
@@ -78,9 +95,9 @@ public class Life {
         isGood = false;
     }
 
-    public void move()
+    public void Move()
     {
-        if (active)
+        if (Active)
         {
             if (!isGood)
             {
@@ -98,19 +115,19 @@ public class Life {
     }
     private void Dead()
     {
-        active = false;
+        Active = false;
     }
     private void Born()
     {
-        active = true;
+        Active = true;
         if(DoHaveEnv)return;
-        world.GiveEnv(this);
+        World.GiveEnv(this);
     }
     public void SetActive()
     {
-        active = true;
+        Active = true;
         if (DoHaveEnv) return;
-        world.GiveEnv(this);
+        World.GiveEnv(this);
     }
 }
 public class World
@@ -142,9 +159,9 @@ public class World
     {
         Lives=new List<Life>();
     }
-    private Life isExist(Vector3 pos)
+    private Life LifeExists(Vector3 pos)
     {
-        return Lives.Find(elem => elem.Pos() == pos);
+        return Lives.Find(elem => elem.GetPos() == pos);
     }
     public void Add(Life life)
     {
@@ -152,51 +169,51 @@ public class World
     }
     public void GiveEnv(Life life)
     {
-        var pos = life.Pos();
-        life.env=new List<Life>();
+        var pos = life.GetPos();
+        life.Env=new List<Life>();
         foreach (var next in Directions)
         {
             var newPos = pos + next;
-            life.env.Add(isExist(newPos) ?? new Life(newPos, false));
+            life.Env.Add(LifeExists(newPos) ?? new Life(newPos, false));
         }
-        Debug.Log("EnvCount=="+life.env.Count);
-        foreach (var nearLife in life.env)
+        Debug.Log("EnvCount=="+life.Env.Count);
+        foreach (var nearLife in life.Env)
         {
-            Debug.Log("nearLife.env.Count=="+nearLife.env.Count);
-            if (nearLife.env.Any(nearnearLife => nearnearLife.Pos() == life.Pos()))
+            Debug.Log("nearLife.env.Count=="+nearLife.Env.Count);
+            if (nearLife.Env.Any(nearnearLife => nearnearLife.GetPos() == life.GetPos()))
             {
                 Debug.Log("FindOwn");
                 continue;
             }
-            nearLife.env.Add(life);
+            nearLife.Env.Add(life);
         }
         life.DoHaveEnv = true;
     }
     public void GiveEnv2(Life life)
     {
-        var pos = life.Pos();
-        life.env = new List<Life>();
+        var pos = life.GetPos();
+        life.Env = new List<Life>();
         foreach (var next in Directions)
         {
             var newPos = pos + next;
-            life.env.Add(isExist(newPos) ?? new Life(newPos, false,false));
+            life.Env.Add(LifeExists(newPos) ?? new Life(newPos, false,false));
         }
-        Debug.Log("EnvCount==" + life.env.Count);
-        foreach (var nearLife in life.env)
+        Debug.Log("EnvCount==" + life.Env.Count);
+        foreach (var nearLife in life.Env)
         {
-            Debug.Log("nearLife.env.Count==" + nearLife.env.Count);
-            if (nearLife.env.Any(nearnearLife => nearnearLife.Pos() == life.Pos()))
+            Debug.Log("nearLife.env.Count==" + nearLife.Env.Count);
+            if (nearLife.Env.Any(nearnearLife => nearnearLife.GetPos() == life.GetPos()))
             {
                 Debug.Log("FindOwn");
                 continue;
             }
-            nearLife.env.Add(life);
+            nearLife.Env.Add(life);
         }
         life.DoHaveEnv = true;
     }
     public List<Vector3> Actives()
     {
-        return (from life in Lives where life.isActive() select life.Pos()).ToList();
+        return (from life in Lives where life.IsActive() select life.GetPos()).ToList();
     }
     public void CallLookEnv()
     {
@@ -213,24 +230,24 @@ public class World
         Lives3=new List<Life>();
         foreach (var life in Lives2)
         {
-            life.move();
+            life.Move();
         }
         foreach (var life in Lives3)
         {
-            life.move();
+            life.Move();
             Lives.Add(life);
         }
         
     }
     private bool ExistLife(Vector3 pos)
     {
-        return Lives.Any(life => life.Pos() == pos);
+        return Lives.Any(life => life.GetPos() == pos);
     }
     public Life Put(Vector3 pos)
     {
         if (ExistLife(pos))
         {
-            var life = Lives.Find(ele=>ele.Pos()==pos);
+            var life = Lives.Find(ele=>ele.GetPos() == pos);
             life.SetActive();
             return life;
         }

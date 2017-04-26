@@ -136,7 +136,7 @@ MonoBehaviour:
   m_MinSize: {x: 613, y: 492}
   m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 84
+  controlID: 9
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -160,7 +160,7 @@ MonoBehaviour:
   m_MinSize: {x: 232, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 44
+  controlID: 46
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -342,8 +342,8 @@ MonoBehaviour:
     height: 251
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 5e250000
-    m_LastClickedID: 9566
+    m_SelectedIDs: 
+    m_LastClickedID: 0
     m_ExpandedIDs: e2fbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -404,19 +404,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts
+    - Assets/Prefabs/Life/Move_at4
   m_ViewMode: 1
   m_StartGridSize: 52
   m_LastFolders:
-  - Assets/Scripts
+  - Assets/Prefabs/Life/Move_at4
   m_LastFoldersGridSize: 52
   m_LastProjectPath: C:\Users\Washer\Documents\LifeGame3D\LifeGame3D
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: e8240000
-    m_LastClickedID: 9448
-    m_ExpandedIDs: 00000000b624000000ca9a3bffffff7f
+    m_SelectedIDs: 22250000
+    m_LastClickedID: 9506
+    m_ExpandedIDs: 00000000b8240000de2400002c25000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -444,7 +444,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000b6240000
+    m_ExpandedIDs: 00000000b8240000de240000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -471,22 +471,22 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: de040000e80400006e1c0000d2210000d42100000c050000fc0400000405000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Life
+      m_OriginalName: Life
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 1592
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 9}
     m_CreateAssetUtility:
@@ -526,14 +526,14 @@ MonoBehaviour:
     width: 708
     height: 566
   m_SceneLighting: 1
-  lastFramingTime: 40693.5227754861
+  lastFramingTime: 59318.975736767374
   m_2DMode: 0
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1.716876, y: 7.9263296, z: 10.393699}
+    m_Target: {x: -2.582903, y: 16.898619, z: 2.231678}
     speed: 2
-    m_Value: {x: -1.716876, y: 7.9263296, z: 10.393699}
+    m_Value: {x: -2.582903, y: 16.898619, z: 2.231678}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -556,13 +556,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.22916459, y: 0.24086003, z: -0.058638718, w: -0.9412925}
+    m_Target: {x: -0.19365706, y: 0.48601827, z: -0.11139705, w: -0.8449106}
     speed: 2
-    m_Value: {x: -0.22916459, y: 0.24086004, z: -0.05863872, w: -0.9412925}
+    m_Value: {x: -0.19365706, y: 0.48601827, z: -0.11139705, w: -0.8449106}
   m_Size:
-    m_Target: 30.306648
+    m_Target: 41.916744
     speed: 2
-    m_Value: 30.306648
+    m_Value: 41.916744
   m_Ortho:
     m_Target: 0
     speed: 2
