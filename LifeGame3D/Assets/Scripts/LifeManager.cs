@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
 public class LifeManager : MonoBehaviour {
     public int Max;
     public int Min;
@@ -24,7 +23,6 @@ public class LifeManager : MonoBehaviour {
         PutLife(PutLives,Prefab);
         isLifeManagerInitialized = true;
     }
-
     public static void PutLife(Vector3[] array,GameObject prefab)
     {
         foreach (var pos in array)
@@ -36,7 +34,6 @@ public class LifeManager : MonoBehaviour {
             objects.Add(newObj);
         }
     }
-
     public bool ok;
     public void Update()
     {
@@ -64,7 +61,6 @@ public class LifeManager : MonoBehaviour {
             }
         }
     }
-
     private void MakeView(IEnumerable<Vector3> poss)
     {
         var array = poss as Vector3[] ?? poss.ToArray();
@@ -80,7 +76,7 @@ public class LifeManager : MonoBehaviour {
         }
         for (int i=0;i<objects.Count;i++)
         {
-            objects[i].transform.localPosition = i < array.Length ? array[i] : new Vector3(-100,-1000,-100);
+            objects[i].transform.localPosition = i < array.Length ? array[i] :array.Length<1?new Vector3(-100,-100,-100):array[0];
         }
     }
 }

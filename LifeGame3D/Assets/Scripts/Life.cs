@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
 public class Life {
     private Vector3 Pos { get; set; }
-
     public Vector3 GetPos()
     {
         return Pos;
     }
-
     public List<Life> Env { get; set; }
     public bool DoHaveEnv { get; set; }
     private bool Active { get; set; }
@@ -20,7 +17,6 @@ public class Life {
     private bool isGood;
     private static Vector2 MaxMin { get; set; }
     public static World World { get; set; }
-
     public bool IsGood
     {
         get
@@ -33,7 +29,6 @@ public class Life {
             isGood = value;
         }
     }
-
     private static void WorldInitializer()
     {//ワールドを初期化
         World.WorldInitializer();
@@ -89,7 +84,6 @@ public class Life {
         }
         isGood = false;
     }
-
     public void Move()
     {
         if (Active)
@@ -215,7 +209,6 @@ public class World
             life.LookEnv();
         }
     }
-
     public List<Life> Lives3;
     public void CallMove()
     { 
@@ -230,7 +223,6 @@ public class World
             life.Move();
             Lives.Add(life);
         }
-        
     }
     private bool ExistLife(Vector3 pos)
     {

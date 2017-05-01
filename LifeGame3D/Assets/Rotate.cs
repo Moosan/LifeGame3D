@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-
 public class Rotate : MonoBehaviour {
-
     public float RotateSpeed;
     private void Update()
     {
