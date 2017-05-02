@@ -67,7 +67,16 @@ public class Life {
     }
     private int EnvState()
     {//Envirnmentの中でアクティブなライフの数
-        return Env.Count(next=>next.IsActive());
+        //return Env.Count(next=>next.IsActive());
+        int count = 0;
+        for(int i = 0; i < Env.Count; i++)
+        {
+            if (Env[i].IsActive())
+            {
+                count++;
+            }
+        }
+        return count;
     }
     public void LookEnv()
     {
@@ -153,7 +162,14 @@ public class World
     }
     private Life LifeExists(Vector3 pos)
     {
-        return Lives.Find(elem => elem.GetPos() == pos);
+        for(int i = 0; i < Lives.Count; i++)
+        {
+            if (Lives[i].GetPos() == pos)
+            {
+                return Lives[i];
+            }
+        }
+        return null;
     }
     public void Add(Life life)
     {
@@ -171,7 +187,20 @@ public class World
 
         foreach (var nearLife in life.Env)
         {
-            if (nearLife.Env.Any(nearnearLife => nearnearLife.GetPos() == life.GetPos()))
+            /*if (nearLife.Env.Any(nearnearLife => nearnearLife.GetPos() == life.GetPos()))
+            {
+                continue;
+            }*/
+            bool Add = true;
+            for (int i = 0; i < nearLife.Env.Count; i++)
+            {
+                if (nearLife.Env[i].GetPos() == life.GetPos())
+                {
+                    Add = false;
+                    break;
+                }
+            }
+            if (!Add)
             {
                 continue;
             }
@@ -190,10 +219,19 @@ public class World
         }
         foreach (var nearLife in life.Env)
         {
-            if (nearLife.Env.Any(nearnearLife => nearnearLife.GetPos() == life.GetPos()))
+            bool Add = true;
+            for(int i = 0; i < nearLife.Env.Count; i++)
+            {
+                if (nearLife.Env[i].GetPos() == life.GetPos()) {
+                    Add = false;
+                    break;
+                }
+            }
+            if (!Add)
             {
                 continue;
             }
+
             nearLife.Env.Add(life);
         }
         life.DoHaveEnv = true;
@@ -218,23 +256,45 @@ public class World
         {
             life.Move();
         }
-        foreach (var life in Lives3)
+        /*foreach (var life in Lives3)
         {
             life.Move();
             Lives.Add(life);
-        }
+        }*/
+        //実装に必要ない可能性があるのでコメントアウト(確信は無いけど多分大丈夫)
+        //何度かやってみて大丈夫っぽいけど、もしかしたら微妙に違ってるかもしれない
     }
     private bool ExistLife(Vector3 pos)
     {
-        return Lives.Any(life => life.GetPos() == pos);
+        //return Lives.Any(life => life.GetPos() == pos);
+        for(int i = 0; i < Lives.Count; i++)
+        {
+            if (Lives[i].GetPos() == pos)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     public Life Put(Vector3 pos)
     {
         if (ExistLife(pos))
         {
-            var life = Lives.Find(ele=>ele.GetPos() == pos);
-            life.SetActive();
-            return life;
+            Life life;
+            //var life = Lives.Find(ele=>ele.GetPos() == pos);
+            for(int i = 0; i < Lives.Count; i++)
+            {
+                if (Lives[i].GetPos() == pos)
+                {
+                    life = Lives[i];
+                    life.SetActive();
+                    return life;
+                }
+                else
+                {
+                    life = null;
+                }
+            }
         }
         return new Life(pos);
     }

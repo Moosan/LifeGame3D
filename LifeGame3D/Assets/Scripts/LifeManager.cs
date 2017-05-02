@@ -27,7 +27,19 @@ public class LifeManager : MonoBehaviour {
     {
         foreach (var pos in array)
         {
-            if(objects.Any(obj=>obj.transform.localPosition==pos))continue;
+            //if(objects.Any(obj=>obj.transform.localPosition==pos))continue;
+            bool con = false;
+            for(int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i].transform.localPosition == pos) {
+                    con = true;
+                    continue;
+                }
+            }
+            if (con)
+            {
+                continue;
+            }
             world.Put(pos);
             GameObject newObj = Instantiate(prefab, pos, new Quaternion());
             newObj.transform.parent = gameobject.transform;
