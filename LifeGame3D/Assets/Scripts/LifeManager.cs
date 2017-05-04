@@ -65,6 +65,7 @@ public class LifeManager : MonoBehaviour {
                 case 2:
                     index = 0;
                     MakeView(world.Actives());
+                    Debug.Log(world.Actives().Count+":"+objects.Count);
                     if (NonStop) break;
                     ok = false;
                     break;

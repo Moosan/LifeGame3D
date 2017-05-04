@@ -2,11 +2,7 @@
 using System.Linq;
 using UnityEngine;
 public class Life {
-    private Vector3 Pos { get; set; }
-    public Vector3 GetPos()
-    {
-        return Pos;
-    }
+    public Vector3 Pos { get; private set; }
     public List<Life> Env { get; set; }
     public bool DoHaveEnv { get; set; }
     private bool Active { get; set; }
@@ -17,18 +13,7 @@ public class Life {
     private bool isGood;
     private static Vector2 MaxMin { get; set; }
     public static World World { get; set; }
-    public bool IsGood
-    {
-        get
-        {
-            return isGood;
-        }
-
-        set
-        {
-            isGood = value;
-        }
-    }
+    public bool IsGood{ get; set; }
     private static void WorldInitializer()
     {//ワールドを初期化
         World.WorldInitializer();
@@ -164,7 +149,7 @@ public class World
     {
         for(int i = 0; i < Lives.Count; i++)
         {
-            if (Lives[i].GetPos() == pos)
+            if (Lives[i].Pos == pos)
             {
                 return Lives[i];
             }
@@ -177,7 +162,7 @@ public class World
     }
     public void GiveEnv(Life life)
     {
-        var pos = life.GetPos();
+        var pos = life.Pos;
         life.Env=new List<Life>();
         foreach (var next in Directions)
         {
@@ -194,7 +179,7 @@ public class World
             bool Add = true;
             for (int i = 0; i < nearLife.Env.Count; i++)
             {
-                if (nearLife.Env[i].GetPos() == life.GetPos())
+                if (nearLife.Env[i].Pos == life.Pos)
                 {
                     Add = false;
                     break;
@@ -210,7 +195,7 @@ public class World
     }
     public void GiveEnv2(Life life)
     {
-        var pos = life.GetPos();
+        var pos = life.Pos;
         life.Env = new List<Life>();
         foreach (var next in Directions)
         {
@@ -222,7 +207,7 @@ public class World
             bool Add = true;
             for(int i = 0; i < nearLife.Env.Count; i++)
             {
-                if (nearLife.Env[i].GetPos() == life.GetPos()) {
+                if (nearLife.Env[i].Pos == life.Pos) {
                     Add = false;
                     break;
                 }
@@ -238,7 +223,7 @@ public class World
     }
     public List<Vector3> Actives()
     {
-        return (from life in Lives where life.IsActive() select life.GetPos()).ToList();
+        return (from life in Lives where life.IsActive() select life.Pos).ToList();
     }
     public void CallLookEnv()
     {
@@ -269,7 +254,7 @@ public class World
         //return Lives.Any(life => life.GetPos() == pos);
         for(int i = 0; i < Lives.Count; i++)
         {
-            if (Lives[i].GetPos() == pos)
+            if (Lives[i].Pos == pos)
             {
                 return true;
             }
@@ -284,7 +269,7 @@ public class World
             //var life = Lives.Find(ele=>ele.GetPos() == pos);
             for(int i = 0; i < Lives.Count; i++)
             {
-                if (Lives[i].GetPos() == pos)
+                if (Lives[i].Pos == pos)
                 {
                     life = Lives[i];
                     life.SetActive();
