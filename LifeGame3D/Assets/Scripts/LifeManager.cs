@@ -12,6 +12,8 @@ public class LifeManager : MonoBehaviour {
     private int index;
     public static bool isLifeManagerInitialized;
     public bool NonStop;
+    private float t;
+    private double startDt, endDt, ts;
     public void Start()
     {
         gameobject = gameObject;
@@ -22,6 +24,7 @@ public class LifeManager : MonoBehaviour {
         ok = false;
         PutLife(PutLives,Prefab);
         isLifeManagerInitialized = true;
+
     }
     public static void PutLife(Vector3[] array,GameObject prefab)
     {
@@ -55,19 +58,45 @@ public class LifeManager : MonoBehaviour {
             switch (index%3)
             {
                 case 0:
+                    Debug.Log("-------------------------------------------");
+                    //Life全体に、自分の周りにいるLifeの状況(State)を見ろって言ってる
+                    //Call→LookEnvironment
+                    //CallLookEnvはworldクラスにあって、foreachで書かれてる。
+                    //並列化したい。
                     index = 1;
+                    
+                    startDt =Time.realtimeSinceStartup ;
                     world.CallLookEnv();
+                    endDt = Time.realtimeSinceStartup;
+                    ts = endDt - startDt;
+                    Debug.Log("LookEnv:"+ts); 
                     break;
                 case 1:
+                    //さっき周りの状況を見たので、それに従って生まれるか生き残るか死ぬかしろって言ってる。
+                    //このCallMoveメソッドもforeachで書かれてる
+                    //並列化したい。
                     index = 2;
+                    
+                    startDt = Time.realtimeSinceStartup;
                     world.CallMove();
+                    endDt = Time.realtimeSinceStartup;
+                    ts = endDt - startDt;
+                    Debug.Log("CallMove:"+ts);
                     break;
                 case 2:
+                    //ライフが勝手に動いてくれたみたいなので
+                    //worldから、生きてるライフの場所のリストだけもらって
+                    //このリストから、ライフの場所をUnity上に表示する。
                     index = 0;
+                    
+                    startDt = Time.realtimeSinceStartup;
                     MakeView(world.Actives());
-                    Debug.Log(world.Actives().Count+":"+objects.Count);
+                    endDt = Time.realtimeSinceStartup;
+                    ts = endDt - startDt;
+                    Debug.Log("MakeView:"+ts);
                     if (NonStop) break;
                     ok = false;
+                    
                     break;
                 default:
                     break;

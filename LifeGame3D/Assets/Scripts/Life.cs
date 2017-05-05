@@ -41,15 +41,6 @@ public class Life {
         this.Active = active;
         World.Add(this);
     }
-    public Life(Vector3 pos, bool active,bool hoge)
-    {//急遽作られた謎のコンストラクタ
-        Env = new List<Life>();
-        this.Pos = pos;
-        DoHaveEnv = false;
-        this.Active = active;
-        //Live3にAddしてる、こうすることで、worldのCallMove内あるforeach文の母集合の要素数に変更を加えることを阻止している。
-        World.Lives3.Add(this);
-    }
     private int EnvState()
     {//Envirnmentの中でアクティブなライフの数
         //return Env.Count(next=>next.IsActive());
@@ -161,7 +152,8 @@ public class World
         Lives.Add(life);
     }
     public void GiveEnv(Life life)
-    {
+    {//このメソッドが恐らく諸悪の根源
+        //ライフが、自分の周りのリストの配列を取得してる
         var pos = life.Pos;
         life.Env=new List<Life>();
         foreach (var next in Directions)
@@ -193,34 +185,7 @@ public class World
         }
         life.DoHaveEnv = true;
     }
-    public void GiveEnv2(Life life)
-    {
-        var pos = life.Pos;
-        life.Env = new List<Life>();
-        foreach (var next in Directions)
-        {
-            var newPos = pos + next;
-            life.Env.Add(LifeExists(newPos) ?? new Life(newPos, false,false));
-        }
-        foreach (var nearLife in life.Env)
-        {
-            bool Add = true;
-            for(int i = 0; i < nearLife.Env.Count; i++)
-            {
-                if (nearLife.Env[i].Pos == life.Pos) {
-                    Add = false;
-                    break;
-                }
-            }
-            if (!Add)
-            {
-                continue;
-            }
-
-            nearLife.Env.Add(life);
-        }
-        life.DoHaveEnv = true;
-    }
+    
     public List<Vector3> Actives()
     {
         return (from life in Lives where life.IsActive() select life.Pos).ToList();
@@ -232,22 +197,14 @@ public class World
             life.LookEnv();
         }
     }
-    public List<Life> Lives3;
     public void CallMove()
-    { 
+    { //諸悪の根源を何度も呼び出してるメソッド
+        //最も並列化したい場所
         var Lives2= Lives.ToList();
-        Lives3=new List<Life>();
         foreach (var life in Lives2)
         {
             life.Move();
         }
-        /*foreach (var life in Lives3)
-        {
-            life.Move();
-            Lives.Add(life);
-        }*/
-        //実装に必要ない可能性があるのでコメントアウト(確信は無いけど多分大丈夫)
-        //何度かやってみて大丈夫っぽいけど、もしかしたら微妙に違ってるかもしれない
     }
     private bool ExistLife(Vector3 pos)
     {
