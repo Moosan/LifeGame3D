@@ -1,124 +1,161 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-public class LifeManager : MonoBehaviour {
-    public int Max;
-    public int Min;
-    private static World world;
-    public GameObject Prefab;
-    private static GameObject gameobject;
-    private static List<GameObject> objects;
-    public Vector3[] PutLives;
-    private int index;
-    public static bool isLifeManagerInitialized;
-    public bool NonStop;
-    private float t;
-    private double startDt, endDt, ts;
-    public void Start()
+using System.Threading;
+namespace LifeGame
+{
+    public class LifeManager : MonoBehaviour
     {
-        gameobject = gameObject;
-        Life.LifeInitializer(Max,Min);
-        world = Life.World;
-        objects=new List<GameObject>();
-        index = 0;
-        ok = false;
-        PutLife(PutLives,Prefab);
-        isLifeManagerInitialized = true;
 
-    }
-    public static void PutLife(Vector3[] array,GameObject prefab)
-    {
-        foreach (var pos in array)
-        {
-            //if(objects.Any(obj=>obj.transform.localPosition==pos))continue;
-            bool con = false;
-            for(int i = 0; i < objects.Count; i++)
+        //Unityのインスペクターで操作したい変数
+        [SerializeField] private int Max;
+        [SerializeField] private int Min;
+        [SerializeField] private GameObject Prefab;
+        [SerializeField] private Vector3[] PutLives;
+        [SerializeField] private bool ok;
+        [SerializeField] private float interval;
+
+        //スクリプト内で完結する変数
+        private static GameObject gameobject { get; set; }
+        private static List<GameObject> Objects { get; set; }
+        public static bool IsLifeManagerInitialized { get; set; }
+        private static World World { get; set; }
+        private float T { get; set; }
+        private double StartDt { get; set; }
+        private double EndDt { get; set; }
+        private double Ts { get; set; }
+        private List<List<Vector3>> PosList { get; set; }
+        private float Time { get; set; }
+        private bool End { get; set; }
+        private bool treadmove;
+
+        //Start関数
+        private void Start()
+        {//いろいろと初期化してる。
+            gameobject = gameObject;
+            Life.LifeInitializer(Max, Min);
+            World = Life.World;
+            Objects = new List<GameObject>();
+            ok = false;
+            PutLife(PutLives, Prefab);
+            IsLifeManagerInitialized = true;
+            PosList = new List<List<Vector3>> { };
+            Time = 0;
+            End = false;
+            treadmove = true;
+        }
+        
+        
+        //Update関数
+        public void Update()
+        {//スレッドを使って、LifeMove関数を非同期で呼び出している。
+            if ( !End)
             {
-                if (objects[i].transform.localPosition == pos) {
-                    con = true;
-                    continue;
+                if (treadmove)
+                {
+                    treadmove = false;
+                    var thread = new Thread(new ThreadStart(OneMove));
+                    thread.Start();
                 }
             }
-            if (con)
-            {
-                continue;
-            }
-            world.Put(pos);
-            GameObject newObj = Instantiate(prefab, pos, new Quaternion());
-            newObj.transform.parent = gameobject.transform;
-            objects.Add(newObj);
         }
-    }
-    public bool ok;
-    public void Update()
-    {
-        if (Input.GetKey(KeyCode.UpArrow)) ok = false;
-        if (ok)
-        {
-            switch (index%3)
+
+        //LateUpdate関数
+        private void LateUpdate()
+        {//インターバル毎にMakeView関数を呼び出している。
+            Time += UnityEngine.Time.deltaTime;
+            if (ok && Time >= interval)
             {
-                case 0:
-                    Debug.Log("-------------------------------------------");
-                    //Life全体に、自分の周りにいるLifeの状況(State)を見ろって言ってる
-                    //Call→LookEnvironment
-                    //CallLookEnvはworldクラスにあって、foreachで書かれてる。
-                    //並列化したい。
-                    index = 1;
-                    
-                    startDt =Time.realtimeSinceStartup ;
-                    world.CallLookEnv();
-                    endDt = Time.realtimeSinceStartup;
-                    ts = endDt - startDt;
-                    Debug.Log("LookEnv:"+ts); 
-                    break;
-                case 1:
-                    //さっき周りの状況を見たので、それに従って生まれるか生き残るか死ぬかしろって言ってる。
-                    //このCallMoveメソッドもforeachで書かれてる
-                    //並列化したい。
-                    index = 2;
-                    
-                    startDt = Time.realtimeSinceStartup;
-                    world.CallMove();
-                    endDt = Time.realtimeSinceStartup;
-                    ts = endDt - startDt;
-                    Debug.Log("CallMove:"+ts);
-                    break;
-                case 2:
-                    //ライフが勝手に動いてくれたみたいなので
-                    //worldから、生きてるライフの場所のリストだけもらって
-                    //このリストから、ライフの場所をUnity上に表示する。
-                    index = 0;
-                    
-                    startDt = Time.realtimeSinceStartup;
-                    MakeView(world.Actives());
-                    endDt = Time.realtimeSinceStartup;
-                    ts = endDt - startDt;
-                    Debug.Log("MakeView:"+ts);
-                    if (NonStop) break;
-                    ok = false;
-                    
-                    break;
-                default:
-                    break;
+                if (PosList.Count >= 1)
+                {
+                    MakeView(PosList[0]);
+                    PosList.Remove(PosList[0]);
+                    Time = 0;
+                }
+                else
+                {
+                    if (End)
+                    {
+                        while (Objects.Count >= 1)
+                        {
+                            Destroy(Objects[0]);
+                            Objects.Remove(Objects[0]);
+                        }
+                    }
+                }
             }
         }
-    }
-    private void MakeView(IEnumerable<Vector3> poss)
-    {
-        var array = poss as Vector3[] ?? poss.ToArray();
-        var delta=array.Length-objects.Count;
-        if (delta>0)
-        {
-            for (int i = 0; i < delta; i++)
+
+        //MakeView関数
+        private void MakeView(IEnumerable<Vector3> poss)
+        {//ライフの状況を描写する。
+            var array = poss as Vector3[] ?? poss.ToArray();
+            var delta = array.Length - Objects.Count;
+            if (delta > 0)
             {
-                GameObject newObj = Instantiate(Prefab, new Vector3(), transform.rotation);
+                for (int i = 0; i < delta; i++)
+                {
+                    GameObject newObj = Instantiate(Prefab, new Vector3(), transform.rotation);
+                    newObj.transform.parent = gameobject.transform;
+                    Objects.Add(newObj);
+                }
+            }
+            for (int i = 0; i < Objects.Count; i++)
+            {
+                var len = array.Length;
+                if (i < len)
+                {
+                    Objects[i].transform.localPosition = array[i];
+                    Objects[i].GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value, 0.2f);
+                }
+                else {
+                    Objects[i].transform.localPosition = new Vector3(0, 0, 0);
+                    Objects[i].GetComponent<MeshRenderer>().material.color =Color.clear;
+                }
+            }
+        }
+
+        //PutLife関数
+        public static void PutLife(Vector3[] array, GameObject prefab)
+        {//初期位置のライフを配置している。
+            foreach (var pos in array)
+            {
+                //if(objects.Any(obj=>obj.transform.localPosition==pos))continue;
+                bool con = false;
+                for (int i = 0; i < Objects.Count; i++)
+                {
+                    if (Objects[i].transform.localPosition == pos)
+                    {
+                        con = true;
+                        continue;
+                    }
+                }
+                if (con)
+                {
+                    continue;
+                }
+                World.Put(pos);
+                GameObject newObj = Instantiate(prefab, pos, new Quaternion());
                 newObj.transform.parent = gameobject.transform;
-                objects.Add(newObj);
+                Objects.Add(newObj);
             }
         }
-        for (int i=0;i<objects.Count;i++)
-        {
-            objects[i].transform.localPosition = i < array.Length ? array[i] :array.Length<1?new Vector3(-100,-100,-100):array[0];
+
+        //LifeMove関数
+        private void OneMove()
+        {//Lifeの動きを計算している。
+            World.CallLookEnv();
+            World.CallMove();
+            var actives = World.Actives();
+            if (actives.Count >= 1)
+            {
+                PosList.Add(World.Actives());
+            }
+            if (World.Actives().Count < 1)
+            {
+                End = true;
+            }
+            treadmove = true;
         }
     }
 }
