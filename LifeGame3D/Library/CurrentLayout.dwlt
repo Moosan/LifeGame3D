@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 521}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -43,7 +43,7 @@ MonoBehaviour:
     y: 0
     width: 1280
     height: 637
-  m_MinSize: {x: 950, y: 521}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -107,10 +107,10 @@ MonoBehaviour:
     y: 30
     width: 1280
     height: 587
-  m_MinSize: {x: 611, y: 471}
-  m_MaxSize: {x: 18006, y: 14021}
+  m_MinSize: {x: 613, y: 492}
+  m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 33245
+  controlID: 199
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -131,10 +131,10 @@ MonoBehaviour:
     y: 0
     width: 373
     height: 587
-  m_MinSize: {x: 230, y: 471}
-  m_MaxSize: {x: 10000, y: 14021}
+  m_MinSize: {x: 232, y: 492}
+  m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 33246
+  controlID: 177
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_MinSize: {x: 277, y: 192}
   m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 33212
+  controlID: 258
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -390,9 +390,9 @@ MonoBehaviour:
     height: 295
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: aaa0fcff90cbfcff66d7fcff4cd9fcffb4a0fdffb2adfdffcccafdffc0d0fdff48d7fdff98fcfdff2cfdfdffec05feffe4fbffff00000000dc520000
+    m_SelectedIDs: 442b0000
+    m_LastClickedID: 11076
+    m_ExpandedIDs: 9cf7ffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -452,19 +452,18 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Prefabs/Life/Move_at4
+    - Assets/Scripts
   m_ViewMode: 0
   m_StartGridSize: 52
-  m_LastFolders:
-  - Assets/Prefabs/Life/Move_at4
+  m_LastFolders: []
   m_LastFoldersGridSize: 52
-  m_LastProjectPath: C:\Users\Washer\Documents\LifeGame3D\LifeGame3D
+  m_LastProjectPath: C:\Users\Washer\Documents\CrudeFile\LifeGame3D\LifeGame3D
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 9}
     m_SelectedIDs: 36250000
     m_LastClickedID: 9526
-    m_ExpandedIDs: 00000000c0240000e6240000182500001c2500002625000044250000462500004e250000f8380000fc38000000390000003b0000be400000
+    m_ExpandedIDs: 000000006a2a0000902a0000c42a0000c82a0000ea2a0000ee2a0000f02a0000f82a0000fe2a0000842b0000862b0000882b00008a2b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -489,10 +488,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
-    scrollPos: {x: 0, y: 204}
+    scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000c0240000e6240000182500001c2500002625000044250000462500004e250000f8380000fc38000000390000003b0000be400000
+    m_ExpandedIDs: 000000006a2a0000b42a0000b62a0000c42a0000c82a0000ee2a0000f82a0000842b0000862b0000882b00008a2b0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
