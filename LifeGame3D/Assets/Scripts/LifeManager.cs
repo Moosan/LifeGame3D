@@ -6,17 +6,16 @@ namespace LifeGame
 {
     public class LifeManager : MonoBehaviour
     {
-
         //Unityのインスペクターで操作したい変数
         [SerializeField] private int Max;
         [SerializeField] private int Min;
         [SerializeField] private GameObject Prefab;
         [SerializeField] private Vector3[] PutLives;
-        [SerializeField] private bool ok;
         [SerializeField] private float interval;
 
         //スクリプト内で完結する変数
-        private static GameObject gameobject { get; set; }
+        private bool Ok { get; set; }
+        private static GameObject Gameobject { get; set; }
         private static List<GameObject> Objects { get; set; }
         public static bool IsLifeManagerInitialized { get; set; }
         private static World World { get; set; }
@@ -27,34 +26,33 @@ namespace LifeGame
         private List<List<Vector3>> PosList { get; set; }
         private float Time { get; set; }
         private bool End { get; set; }
-        private bool treadmove;
+        private bool Treadmove { get; set; }
 
         //Start関数
         private void Start()
         {//いろいろと初期化してる。
-            gameobject = gameObject;
+            Gameobject = gameObject;
             Life.LifeInitializer(Max, Min);
             World = Life.World;
             Objects = new List<GameObject>();
-            ok = false;
+            Ok = false;
             PutLife(PutLives, Prefab);
             IsLifeManagerInitialized = true;
             PosList = new List<List<Vector3>> { };
             Time = 0;
             End = false;
-            treadmove = true;
+            Treadmove = true;
         }
-        
         
         //Update関数
         public void Update()
         {//スレッドを使って、LifeMove関数を非同期で呼び出している。
             if ( !End)
             {
-                if (treadmove)
+                if (Treadmove)
                 {
-                    treadmove = false;
-                    var thread = new Thread(new ThreadStart(OneMove));
+                    Treadmove = false;
+                    var thread = new Thread(new ThreadStart(LifeMove));
                     thread.Start();
                 }
             }
@@ -64,7 +62,7 @@ namespace LifeGame
         private void LateUpdate()
         {//インターバル毎にMakeView関数を呼び出している。
             Time += UnityEngine.Time.deltaTime;
-            if (ok && Time >= interval)
+            if (Ok && Time >= interval)
             {
                 if (PosList.Count >= 1)
                 {
@@ -96,21 +94,24 @@ namespace LifeGame
                 for (int i = 0; i < delta; i++)
                 {
                     GameObject newObj = Instantiate(Prefab, new Vector3(), transform.rotation);
-                    newObj.transform.parent = gameobject.transform;
+                    newObj.transform.parent = Gameobject.transform;
                     Objects.Add(newObj);
                 }
             }
             for (int i = 0; i < Objects.Count; i++)
             {
+
+                Objects[i].GetComponent<ParticleSystem>().Stop();
+                Objects[i].GetComponent<ParticleSystem>().Clear();
                 var len = array.Length;
                 if (i < len)
                 {
                     Objects[i].transform.localPosition = array[i];
-                    Objects[i].GetComponent<MeshRenderer>().material.color = new Color(Random.value, Random.value, Random.value, 0.2f);
+                    Objects[i].GetComponent<ParticleSystem>().Play();
                 }
-                else {
-                    Objects[i].transform.localPosition = new Vector3(0, 0, 0);
-                    Objects[i].GetComponent<MeshRenderer>().material.color =Color.clear;
+                else
+                {
+                    Objects[i].transform.localPosition = new Vector3();
                 }
             }
         }
@@ -136,13 +137,13 @@ namespace LifeGame
                 }
                 World.Put(pos);
                 GameObject newObj = Instantiate(prefab, pos, new Quaternion());
-                newObj.transform.parent = gameobject.transform;
+                newObj.transform.parent = Gameobject.transform;
                 Objects.Add(newObj);
             }
         }
 
         //LifeMove関数
-        private void OneMove()
+        private void LifeMove()
         {//Lifeの動きを計算している。
             World.CallLookEnv();
             World.CallMove();
@@ -154,8 +155,14 @@ namespace LifeGame
             if (World.Actives().Count < 1)
             {
                 End = true;
+                Debug.Log("収束しました！\n是非再生しちゃってくだせえ！！");
             }
-            treadmove = true;
+            Treadmove = true;
+        }
+
+        public void GameStart()
+        {
+            Ok = true;
         }
     }
 }
