@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Threading;
 using System.Linq;
 namespace LifeGame
 {
@@ -8,11 +7,6 @@ namespace LifeGame
     {
         private List<Life> Lives { get; set; }
         private static Vector3[] Directions { get; set; }
-        private Thread[] Threads { get; set; }
-        public int Length()
-        {
-            return Lives.Count;
-        }
         private static void DirectionsInitializer()
         {
             Directions = new Vector3[26];
@@ -92,9 +86,9 @@ namespace LifeGame
             }
             life.DoHaveEnv = true;
         }
-        public List<Vector3> Actives()
+        public List<Vector3> Actives(bool active)
         {
-            return (from life in Lives where life.Active select life.Pos).ToList();
+            return (from life in Lives where life.Active==active select life.Pos).ToList();
         }
         public void CallLookEnv()
         {
@@ -116,34 +110,12 @@ namespace LifeGame
         }
         public void CallMove()
         {
-          //最も並列化したい場所
             var Lives2 = Lives.ToList();
             
-            //*
             foreach (var life in Lives2)
             {
                 life.Move();
             }
-            /*/
-            Threads = new Thread[Lives2.Count];
-            for (int i = 0; i < Lives2.Count; i++)
-            {
-                // 2.
-                // Thread クラスの構築する
-                Threads[i] = new Thread(new ThreadStart(Lives2[i].Move));
-
-                // 3.
-                // Start を使ってスレッドの開始する
-                Threads[i].Start();
-            }
-            // スレッド終了待ち
-            for (int i = 0; i < Lives2.Count; i++)
-            {
-                // 4.
-                // Join を使ってスレッドの終了を待つ
-                Threads[i].Join();
-            }
-            //*/
         }
         private bool ExistLife(Vector3 pos)
         {

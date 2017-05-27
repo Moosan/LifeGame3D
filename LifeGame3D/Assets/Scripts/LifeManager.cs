@@ -27,7 +27,6 @@ namespace LifeGame
         private float Time { get; set; }
         private bool End { get; set; }
         private bool Treadmove { get; set; }
-
         //Start関数
         private void Start()
         {//いろいろと初期化してる。
@@ -43,7 +42,6 @@ namespace LifeGame
             End = false;
             Treadmove = true;
         }
-        
         //Update関数
         public void Update()
         {//スレッドを使って、LifeMove関数を非同期で呼び出している。
@@ -57,7 +55,6 @@ namespace LifeGame
                 }
             }
         }
-
         //LateUpdate関数
         private void LateUpdate()
         {//インターバル毎にMakeView関数を呼び出している。
@@ -83,7 +80,6 @@ namespace LifeGame
                 }
             }
         }
-
         //MakeView関数
         private void MakeView(IEnumerable<Vector3> poss)
         {//ライフの状況を描写する。
@@ -100,7 +96,6 @@ namespace LifeGame
             }
             for (int i = 0; i < Objects.Count; i++)
             {
-
                 Objects[i].GetComponent<ParticleSystem>().Stop();
                 Objects[i].GetComponent<ParticleSystem>().Clear();
                 var len = array.Length;
@@ -115,7 +110,6 @@ namespace LifeGame
                 }
             }
         }
-
         //PutLife関数
         public static void PutLife(Vector3[] array, GameObject prefab)
         {//初期位置のライフを配置している。
@@ -141,25 +135,24 @@ namespace LifeGame
                 Objects.Add(newObj);
             }
         }
-
         //LifeMove関数
         private void LifeMove()
         {//Lifeの動きを計算している。
             World.CallLookEnv();
             World.CallMove();
-            var actives = World.Actives();
+            var actives = World.Actives(true);
             if (actives.Count >= 1)
             {
-                PosList.Add(World.Actives());
+                PosList.Add(actives);
             }
-            if (World.Actives().Count < 1)
+            if (actives.Count < 1)
             {
                 End = true;
                 Debug.Log("収束しました！\n是非再生しちゃってくだせえ！！");
             }
             Treadmove = true;
         }
-
+        //GameStart関数
         public void GameStart()
         {
             Ok = true;
