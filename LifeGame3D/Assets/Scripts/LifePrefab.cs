@@ -3,53 +3,43 @@ namespace LifeGame
 {
     public class LifePrefab : MonoBehaviour
     {
+        public GameObject lifeManager;
         public GameObject Prefab;
-        public Vector3 CenterPos;
         public Vector3[] PresetPos;
         private Vector3 pos;
-        private Vector3[] positions;
-        public Axis DefaltMoveDirection;
-        public Axis Axis;
-        public bool moveFoward;
-        public void Start()
+        private void Start()
         {
-            Vector3 position = transform.position;
-            pos = new Vector3((int)position.x, (int)position.y, (int)position.z);
-            //向きを変えれるようにしたつもりなんだけどなんも変わんない辛い
-            var len = PresetPos.Length;
-            if (DefaltMoveDirection != Axis)
+            for(int i = 0; i < PresetPos.Length; i++)
             {
-                Vector3 rotateAxis = DefaltMoveDirection == Axis.x ? (DefaltMoveDirection == Axis.y ? (Axis == Axis.x ? Vector3.forward : Vector3.left) : (Axis == Axis.x ? Vector3.down : Vector3.right)) : (Axis == Axis.y ? Vector3.back : Vector3.up);
-                for (int i = 0; i < len; i++)
-                {
-                    PresetPos[i] = Quaternion.Euler(90 * rotateAxis) * (PresetPos[i] - CenterPos);
-                }
+                PresetPos[i] = new Vector3((int)PresetPos[i].x,(int)PresetPos[i].y,(int)PresetPos[i].z);
             }
-            if (!moveFoward)
-            {
-                for (int i = 0; i < len; i++)
-                {
-                    PresetPos[i] = -PresetPos[i];
-                }
-            }
-            positions = new Vector3[len];
-            for (int i = 0; i < len; i++)
-            {
-                positions[i] = pos + PresetPos[i];
-            }
+            objs = new GameObject[PresetPos.Length];
+            end = false;
         }
+        private GameObject[] objs;
+        private bool end;
         public void Update()
         {
-            if (LifeManager.IsLifeManagerInitialized)
+            if (LifeManager.IsLifeManagerInitialized&&!end)
             {
-                LifeManager.PutLife(positions, Prefab);
+                for(int i = 0; i < PresetPos.Length; i++)
+                {
+                    GameObject obj=Instantiate(Prefab,PresetPos[i],new Quaternion());
+                    objs[i] = obj;
+                    var life = new LifeObject(PresetPos[i]);
+                    life.Set();
+                }
+                end = true;
+            }
+            if (lifeManager.GetComponent<LifeManager>().Ok)
+            {
+                foreach(var obj in objs)
+                {
+                    Destroy(obj);
+                }
                 Destroy(gameObject);
                 Destroy(this);
             }
         }
-    }
-    public enum Axis
-    {
-        x, y, z
     }
 }

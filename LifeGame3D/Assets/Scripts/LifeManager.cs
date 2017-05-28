@@ -12,21 +12,19 @@ namespace LifeGame
         [SerializeField] private GameObject Prefab;
         [SerializeField] private Vector3[] PutLives;
         [SerializeField] private float interval;
+        [SerializeField] private bool PutTime;
 
         //スクリプト内で完結する変数
-        private bool Ok { get; set; }
+        public bool Ok { get; set; }
         private static GameObject Gameobject { get; set; }
         private static List<GameObject> Objects { get; set; }
         public static bool IsLifeManagerInitialized { get; set; }
         private static World World { get; set; }
-        private float T { get; set; }
-        private double StartDt { get; set; }
-        private double EndDt { get; set; }
-        private double Ts { get; set; }
         private List<List<Vector3>> PosList { get; set; }
         private float Time { get; set; }
         private bool End { get; set; }
         private bool Treadmove { get; set; }
+        private static List<Vector3> StartPositions;
         //Start関数
         private void Start()
         {//いろいろと初期化してる。
@@ -35,17 +33,43 @@ namespace LifeGame
             World = Life.World;
             Objects = new List<GameObject>();
             Ok = false;
-            PutLife(PutLives, Prefab);
+            //PutLife(PutLives, Prefab);
+            StartPositions = new List<Vector3> { };
+            StartPosAdd(PutLives);
             IsLifeManagerInitialized = true;
             PosList = new List<List<Vector3>> { };
             Time = 0;
             End = false;
             Treadmove = true;
         }
+
+        public static void StartPosAdd(Vector3[] poss)
+        {
+            for(int i = 0; i < poss.Length; i++)
+            {
+                StartPosAdd(poss[i]);
+            }
+        }
+        public static void StartPosAdd(Vector3 pos)
+        {
+            bool newPos = true;
+            for(int i = 0; i < StartPositions.Count; i++)
+            {
+                if (StartPositions[i] == pos)
+                {
+                    newPos = false;
+                    break;
+                }
+            }
+            if (newPos)
+            {
+                StartPositions.Add(pos);
+            }
+        }
         //Update関数
         public void Update()
         {//スレッドを使って、LifeMove関数を非同期で呼び出している。
-            if ( !End)
+            if ( !End&&Ok)
             {
                 if (Treadmove)
                 {
@@ -111,7 +135,7 @@ namespace LifeGame
             }
         }
         //PutLife関数
-        public static void PutLife(Vector3[] array, GameObject prefab)
+        public static void PutLife(List<Vector3> array, GameObject prefab)
         {//初期位置のライフを配置している。
             foreach (var pos in array)
             {
@@ -155,7 +179,19 @@ namespace LifeGame
         //GameStart関数
         public void GameStart()
         {
-            Ok = true;
+            if (!Ok)
+            {
+                PutLife(StartPositions,Prefab);
+                Ok = true;
+            }
+            else
+            {
+                /*
+                  一旦動きを止めて直前の状態をObjectsに保存
+                  Lifeを全部falseにする
+                */
+                Ok = false;
+            }
         }
     }
 }

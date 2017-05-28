@@ -6,20 +6,20 @@ namespace Assets.Scripts
 {
     public class Cell : MonoBehaviour
     {
-        public Mesh Mesh;
-        public Material Material;
-        public int X,Y,Z;
-        private V3 _position;
-        public int DepopulationMax;
-        public int CongestionMin;
+        [SerializeField]private Mesh Mesh;
+        [SerializeField]private Material Material;
+        [SerializeField]private int X,Y,Z;
+        [SerializeField]private int DepopulationMax;
+        [SerializeField]private int CongestionMin;
+        private V3 _position { get; set; }
         private Transform _parent;
-        private static int _cellCount;
-        private Cell[] _arounds;
-        private bool _isActive;
-        private bool _hasAllAround;
-        private bool _doThisHaveName;
-        private static List<Cell> _cells;
-        private static V3[] _directions;
+        private static int _cellCount{ get; set; }
+        private Cell[] _arounds{ get; set; }
+        private bool _isActive{ get; set; }
+        private bool _hasAllAround{ get; set; }
+        private bool _doThisHaveName{ get; set; }
+        private static List<Cell> _cells{ get; set; }
+        private static V3[] _directions{ get; set; }
 
         private static void DirectionsInitialize()
         {
@@ -143,7 +143,6 @@ namespace Assets.Scripts
         private bool NextActionBool()
         {
             var aroundCount = AroundCount();
-            Debug.Log("周りの数は"+aroundCount);
             if (aroundCount >= CongestionMin || aroundCount <= DepopulationMax)
             {
                 return _isActive;
@@ -165,14 +164,12 @@ namespace Assets.Scripts
 
         private void AroundInitilize()
         {
-            Debug.Log("AroundInitialize");
             _arounds=new Cell[26];
             for (var i = 0; i < _directions.Length; i++)
             {
                 var nextPos = _directions[i] + _position;
                 var getName = nextPos.Id;
                 var nextCell = GameObject.Find(getName);
-                Debug.Log("nextCell"+(bool)nextCell);
                 if (nextCell)
                 {
                     _arounds[i] = nextCell.GetComponent<Cell>();
@@ -180,7 +177,6 @@ namespace Assets.Scripts
                 }
                 else
                 {
-                    Debug.Log("BeforeInitialize");
                     _arounds[i]=new GameObject(getName).AddComponent<Cell>().Initialize(this,nextPos);
                 }
             }
@@ -189,7 +185,6 @@ namespace Assets.Scripts
 
         private Cell Initialize(Cell originCell,V3 newPos)
         {
-            Debug.Log("Initialize");
             Mesh = originCell.Mesh;
             Material = originCell.Material;
             _isActive = false;
@@ -230,9 +225,11 @@ namespace Assets.Scripts
     }
     public class V3
     {
-        public int X, Y, Z;
-        public Vector3 Pos;
-        public string Id;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
+        public Vector3 Pos { get; set; }
+        public string Id { get; set; }
         public V3(int x,int y,int z)
         {
             X = x;
