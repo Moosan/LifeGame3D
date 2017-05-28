@@ -1,18 +1,26 @@
-# LifeGame3D
-三次元上を動くライフゲームの動きを見たい！
-Unityを使って、ライフゲームの3Dバージョンを作ってみよう！
-というプロジェクトです。
-## ライフゲームとは
-Wikipediaを参照してください。
-[Wikipediaのライフゲーム](https://ja.wikipedia.org/wiki/%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B2%E3%83%BC%E3%83%A0)
-## Git
-[ギットハブはこちら](https://github.com/Moosan/LifeGame3D)
+LifeGame3D
+====
 
-## 操作方法
-まだUnityのエディター上でのみ動かせます。
-シーンを再生する前に、何個かプレハブを置いて下さい。
-試したい配置になったらシーンを再生します。
-後は、LifeGameのインスペクターにてOkというチェックボックスをtrueにすつろ始まります。
+3D版のLifeGameの研究のためのプロジェクト
+製作途中
 
-## この先
-もっと軽くなったらVRゲームにしたいなって思ってます。
+## 元ネタ
+イギリスのコンウェイさんが考えたライフゲームは、どうもアランチューリングが言うところのチューリングマシンと同等の能力を持つらしいです。
+3Dだとどうなんでしょうね。
+[Wikipedia](https://ja.wikipedia.org/wiki/%E3%83%A9%E3%82%A4%E3%83%95%E3%82%B2%E3%83%BC%E3%83%A0)
+
+## イメージ画像
+こんな感じです。
+![](/LifeGame3D/Assets/Textures/LifeImage.png)
+
+## 似た様なやつ
+Youtube漁ったら似た様なことしてる人がいたのでリンク貼っておきます。
+
+[GameOfLife 3d](https://www.youtube.com/watch?v=EW9Q0qMc2Xc)
+
+## 使い方
+アプリ化できていないので使い方も何もありません。
+まだシーンであれこれいじくっている段階です。
+LifeGame3dと名前のついているシーンがメインのシーンです。
+ver1.0とver2.0両方動くので、適当に触ってみてください。
+わからないことがあったら[@Physics_osk](https://twitter.com/Physics_OSK)に聞いて下さい。
