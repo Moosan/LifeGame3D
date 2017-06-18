@@ -36,6 +36,7 @@ namespace LifeGame
             //PutLife(PutLives, Prefab);
             StartPositions = new List<Vector3> { };
             StartPosAdd(PutLives);
+            
             IsLifeManagerInitialized = true;
             PosList = new List<List<Vector3>> { };
             Time = 0;

@@ -17,10 +17,3 @@ LifeGame3D
 Youtube漁ったら似た様なことしてる人がいたのでリンク貼っておきます。
 
 [GameOfLife 3d](https://www.youtube.com/watch?v=EW9Q0qMc2Xc)
-
-## 使い方
-アプリ化できていないので使い方も何もありません。
-まだシーンであれこれいじくっている段階です。
-LifeGame3dと名前のついているシーンがメインのシーンです。
-ver1.0とver2.0両方動くので、適当に触ってみてください。
-わからないことがあったら[@Physics_osk](https://twitter.com/Physics_OSK)に聞いて下さい。

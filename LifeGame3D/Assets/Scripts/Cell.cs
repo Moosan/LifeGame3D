@@ -2,7 +2,7 @@
 using Boo.Lang;
 using UnityEngine;
 
-namespace Assets.Scripts
+namespace Cell
 {
     public class Cell : MonoBehaviour
     {
@@ -20,6 +20,8 @@ namespace Assets.Scripts
         private bool _doThisHaveName{ get; set; }
         private static List<Cell> _cells{ get; set; }
         private static V3[] _directions{ get; set; }
+
+        public static bool GameStart;
 
         private static void DirectionsInitialize()
         {
@@ -80,55 +82,58 @@ namespace Assets.Scripts
             AroundInitilize();
         }
 
-        private static bool _lookAround;
-        private bool _doNextAction;
-        private bool _endAction;
-        private static int _lookCount;
+        private static bool _lookAround { get; set; }
+        private bool _doNextAction { get; set; }
+        private bool _endAction { get; set; }
+        private static int _lookCount { get; set; }
 
         protected virtual void Update()
         {
-            if (!_lookAround)
+            if (GameStart)
             {
-                //Debug.Log("!_lookAround");
-                if (!_endAction)
+                if (!_lookAround)
                 {
-                    //Debug.Log("!endAction");
-                    _doNextAction = NextActionBool();
-                    _lookCount++;
-                    _endAction = true;
-                }
-                if (_lookCount != _cellCount || _lookAround) return;
-                //Debug.Log("合計が等しくなった？" +_lookCount+"=="+_cellCount);
-                _lookAround = true;
-                _lookCount = 0;
-                EndActionBoolChange(false);
-
-            }
-            else
-            {
-                //Debug.Log("LookAround");
-                if (!_endAction)
-                {
-                    //Debug.Log("!endAction2");
-                    if (_doNextAction)
+                    //Debug.Log("!_lookAround");
+                    if (!_endAction)
                     {
-                        //StartCoroutine(YieldWaitForSecond());
-                        BornOrDie();
-                        if (!_hasAllAround && _isActive)
-                        {
-                            AroundInitilize();
-                        }
-                        _doNextAction = false;
+                        //Debug.Log("!endAction");
+                        _doNextAction = NextActionBool();
+                        _lookCount++;
+                        _endAction = true;
                     }
-                    _lookCount++;
-                    _endAction = true;
+                    if (_lookCount != _cellCount || _lookAround) return;
+                    //Debug.Log("合計が等しくなった？" +_lookCount+"=="+_cellCount);
+                    _lookAround = true;
+                    _lookCount = 0;
+                    EndActionBoolChange(false);
+
                 }
-                //Debug.Log(_lookCount + ":" + _cellCount);
-                if (_lookCount != _cellCount || !_lookAround) return;
-                //Debug.Log(_lookAround+"=="+_cellCount);
-                _lookCount = 0;
-                _lookAround = !_lookAround;
-                EndActionBoolChange(false);
+                else
+                {
+                    //Debug.Log("LookAround");
+                    if (!_endAction)
+                    {
+                        //Debug.Log("!endAction2");
+                        if (_doNextAction)
+                        {
+                            //StartCoroutine(YieldWaitForSecond());
+                            BornOrDie();
+                            if (!_hasAllAround && _isActive)
+                            {
+                                AroundInitilize();
+                            }
+                            _doNextAction = false;
+                        }
+                        _lookCount++;
+                        _endAction = true;
+                    }
+                    //Debug.Log(_lookCount + ":" + _cellCount);
+                    if (_lookCount != _cellCount || !_lookAround) return;
+                    //Debug.Log(_lookAround+"=="+_cellCount);
+                    _lookCount = 0;
+                    _lookAround = !_lookAround;
+                    EndActionBoolChange(false);
+                }
             }
         }
 
@@ -222,6 +227,15 @@ namespace Assets.Scripts
         {
             return _arounds.Where(cell => cell != null).Count(cell => cell._isActive);
         }
+
+        public static void Game_Start() {
+            GameStart = true;
+        }
+        public void SetPos(Vector3 pos) {
+            X = (int)pos.x;
+            Y = (int)pos.y;
+            Z = (int)pos.z;
+        }
     }
     public class V3
     {
@@ -238,6 +252,7 @@ namespace Assets.Scripts
             Pos=new Vector3(x,y,z);
             Id = x + y.ToString() + z;
         }
+        
 
         public static V3 operator +(V3 a,V3 b)
         {
