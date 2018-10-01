@@ -3,13 +3,14 @@ namespace LifeGame
 {
     public class LifePrefab : MonoBehaviour
     {
-        public GameObject lifeManager;
+        private GameObject lifeManager;
         public GameObject Prefab;
         public Vector3[] PresetPos;
         private Vector3 pos;
         private void Start()
         {
-            for(int i = 0; i < PresetPos.Length; i++)
+            lifeManager = GameObject.Find("LifeManager");
+            for (int i = 0; i < PresetPos.Length; i++)
             {
                 PresetPos[i] = new Vector3((int)PresetPos[i].x,(int)PresetPos[i].y,(int)PresetPos[i].z);
             }

@@ -13,6 +13,7 @@ namespace LifeGame
         [SerializeField] private Vector3[] PutLives;
         [SerializeField] private float interval;
         [SerializeField] private bool PutTime;
+        [SerializeField] private bool internalMove;
 
         //スクリプト内で完結する変数
         public bool Ok { get; set; }
@@ -36,7 +37,6 @@ namespace LifeGame
             //PutLife(PutLives, Prefab);
             StartPositions = new List<Vector3> { };
             StartPosAdd(PutLives);
-            
             IsLifeManagerInitialized = true;
             PosList = new List<List<Vector3>> { };
             Time = 0;
@@ -70,7 +70,7 @@ namespace LifeGame
         //Update関数
         public void Update()
         {//スレッドを使って、LifeMove関数を非同期で呼び出している。
-            if ( !End&&Ok)
+            if ( !End&&(Ok||internalMove))
             {
                 if (Treadmove)
                 {
@@ -91,6 +91,9 @@ namespace LifeGame
                     MakeView(PosList[0]);
                     PosList.Remove(PosList[0]);
                     Time = 0;
+                    if (PosList.Count < 1 && !internalMove) {
+                        End = true;
+                    }
                 }
                 else
                 {
@@ -172,7 +175,7 @@ namespace LifeGame
             }
             if (actives.Count < 1)
             {
-                End = true;
+                internalMove = false;
                 Debug.Log("収束しました！\n是非再生しちゃってくだせえ！！");
             }
             Treadmove = true;
